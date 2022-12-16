@@ -2,11 +2,11 @@ import Link from "next/link";
 import { FaLinkedin } from "react-icons/fa";
 import appConfig from "../app.config";
 import { GoBackLink } from "../components";
-import Layout from "../components/layout.component";
+import Layout from "../components/layout";
 
 // ----------------------
 
-export default function AboutRoute() {
+export default function About() {
   const title: string = "About";
 
   return (
@@ -17,9 +17,11 @@ export default function AboutRoute() {
 
         <h1>This is a demo project made with</h1>
         <ul>
-          <li>Next.js</li>
+          <li>Next.js (v13)</li>
           <li>React.js</li>
           <li>TypeScript</li>
+          <li>Sass</li>
+          <li>Other libraries</li>
         </ul>
         <br />
         <p>

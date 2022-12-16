@@ -1,3 +1,7 @@
+import Goal from "../models/goal";
+
+// -------------------
+
 export default interface LocalStorageData {
-  goals: IGoal[];
+  goals: Goal[];
 }

@@ -1,7 +1,10 @@
 import Head from "next/head";
-import Footer from "./footer.component";
-import Header from "./header.component";
-import Navbar from "./navbar.component";
+import { Dispatch, SetStateAction } from "react";
+import { Goal } from "../models";
+import AddGoalForm from "./add-goal-form";
+import Footer from "./footer";
+import Header from "./header";
+import Navbar from "./navbar";
 
 // ---------------------
 
@@ -10,7 +13,9 @@ interface Props {
   description?: string;
   keywords?: string;
   children?: React.ReactElement | React.ReactElement[];
-  showHeader?: boolean;
+  isAddGoalFormDisplayed?: boolean;
+  setIsAddGoalFormDisplayed?: Dispatch<SetStateAction<boolean>>;
+  handleAddGoal?: (goal: Goal) => Promise<void>;
 }
 
 // ---------------------
@@ -20,7 +25,9 @@ export default function Layout({
   description,
   keywords,
   children = [],
-  showHeader = true,
+  isAddGoalFormDisplayed = false,
+  setIsAddGoalFormDisplayed,
+  handleAddGoal,
 }: Props) {
   return (
     <>
@@ -32,8 +39,19 @@ export default function Layout({
 
       <div className="container">
         <Navbar />
-        {showHeader && <Header title={title} />}
-        <main className="main">{children}</main>
+
+        <Header
+          title={title}
+          isAddGoalFormDisplayed={isAddGoalFormDisplayed}
+          setIsAddGoalFormDisplayed={setIsAddGoalFormDisplayed}
+        />
+
+        <main className="main">
+          {isAddGoalFormDisplayed && !!handleAddGoal && (
+            <AddGoalForm handleSaveGoal={handleAddGoal} />
+          )}
+          {children}
+        </main>
         <Footer />
       </div>
     </>

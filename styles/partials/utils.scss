@@ -1,0 +1,106 @@
+.goals-tracker-app {
+  .btn {
+    display: flex;
+    background: #000;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 15px;
+    font-family: inherit;
+
+    &:focus {
+      outline: none;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    .suffix-icon {
+      padding-left: 0.5em;
+      margin-top: 0.1em;
+    }
+  }
+
+  .d-inline-block {
+    display: inline-block !important;
+  }
+  .d-block {
+    display: block !important;
+  }
+  .d-none {
+    display: none !important;
+  }
+  .w-100 {
+    width: 100% !important;
+  }
+  .text-center {
+    text-align: center;
+  }
+
+  // .text-ellipsis {
+  //   white-space: nowrap;
+  //   text-overflow: ellipsis;
+  //   overflow: hidden;
+  // }
+
+  .close-icon {
+    color: tomato;
+    cursor: pointer;
+  }
+
+  .circle_highlight {
+    position: relative;
+    background: palegoldenrod;
+    color: tomato;
+    border-radius: 0.25rem;
+    padding: 0.1em 0.25em;
+
+    &:before {
+      content: "";
+      z-index: -1;
+      left: -0.5em;
+      top: -0.1em;
+      border-width: 2px;
+      border-style: solid;
+      border-color: rgb(255, 37, 37);
+      position: absolute;
+      border-right-color: transparent;
+      width: 100%;
+      height: 1em;
+      transform: rotate(2deg);
+      opacity: 0.7;
+      border-radius: 50%;
+      padding: 0.1em 0.25em;
+    }
+
+    &:after {
+      content: "";
+      z-index: -1;
+      left: -0.5em;
+      top: 0.1em;
+      padding: 0.1em 0.25em;
+      border-width: 2px;
+      border-style: solid;
+      border-color: red;
+      border-left-color: transparent;
+      border-top-color: transparent;
+      position: absolute;
+      width: 100%;
+      height: 1em;
+      transform: rotate(-1deg);
+      opacity: 0.7;
+      border-radius: 50%;
+    }
+  }
+
+  mark,
+  .highlight,
+  .warning-text {
+    @extend .circle_highlight;
+  }
+}

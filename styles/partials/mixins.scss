@@ -1,0 +1,75 @@
+@import "./variables";
+
+// MIXINS
+// -----------------------
+
+@mixin lightBgGradient {
+  color: invert($mainColorLight);
+  background: $mainColorLight; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #f7797d,
+    #fbd786,
+    $mainColorLight
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #f7797d,
+    #fbd786,
+    $mainColorLight
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+@mixin darkBgGradient {
+  color: invert($mainColorDark);
+  background: $mainColorDark; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #2c5364,
+    #203a43,
+    $mainColorDark
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #2c5364,
+    #203a43,
+    $mainColorDark
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+@mixin buttonBgGradient {
+  color: #fff;
+  background: #34e89e; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right top,
+    #0f3443,
+    #34e89e
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right top,
+    #0f3443,
+    #34e89e
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+@mixin formFloatingLabelControl {
+  label {
+    position: absolute;
+    top: 0;
+    left: 0.618em;
+    padding: 10px 0;
+    color: $mainColorLight;
+    pointer-events: none;
+    transition: all 0.5s ease-in;
+  }
+
+  label.floating-always,
+  input:focus ~ label,
+  // once dirty, valid and not empty
+  input:not([value=""]):valid ~ label {
+    top: -20px;
+    left: 0;
+    color: $formLabelColor;
+    font-size: 0.8em;
+  }
+}

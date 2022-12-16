@@ -1,11 +1,10 @@
 import { useState } from "react";
 import appConfig from "../../app.config";
-import { GoBackLink } from "../../components";
-import GoalCard from "../../components/goal-card.component";
-import Layout from "../../components/layout.component";
+import { GoalCard, GoBackLink, Layout } from "../../components";
 import { sortGoalsList } from "../../helpers";
-import mockDatabase from "../../mock.database";
-import { Goal } from "../../models";
+import { Goal, LocalStorageData } from "../../models";
+import { LocalStorageService } from "../../services";
+import GoalsService from "../../services/goals.service";
 
 // --------------------
 
@@ -16,55 +15,54 @@ interface Props {
 // -----
 
 export default function Goals({ list }: Props) {
-  const [goals, setGoals] = useState<Goal[]>(mockDatabase.goals); // TODO Change to "list" once data is retrieved from DB
+  // //   const router = useRouter();
+  // //   // If the page is not yet generated, this will be displayed
+  // //   // initially until getStaticProps() finishes running
+  // //   if (router.isFallback) return <div>Loading...</div>;
+
+  const [goals, setGoals] = useState<Goal[]>(list);
+  const [isAddGoalFormDisplayed, setIsAddGoalFormDisplayed] = useState<boolean>(
+    list.length === 0
+  );
 
   const title: string = `${
     appConfig.userName ? `${appConfig.userName}'s ` : ""
   }Goals`;
 
-  // -----
-
-  const handleDeleteGoal = async (goalId: number) => {
-    console.log("[Deleting]", goalId);
-
-    // Save in the database
-    const res = await fetch(`${appConfig.API_URL}/goals/${goalId}`, {
-      method: "DELETE",
-    });
-
+  const onDeleteGoalCallback = (goalId: number) => {
     // const success = (await res).status === 200;
     setGoals((currentGoals) => {
       const newList: Goal[] = sortGoalsList(
         (currentGoals ?? []).filter((goal) => goal.id !== goalId)
       );
+      // Save in local storage (offline)
+      LocalStorageService.setLocalStorageData("goals", newList);
+      // If there is no goals, auto-display the add goal form
+      setIsAddGoalFormDisplayed(newList?.length === 0);
       return newList;
     });
   };
 
-  const handleToggleReminderGoal = async (goal: Goal) => {
-    console.log("[Toggling Reminder for task]", goal.id);
-
-    const newItem = { ...goal, reminder: !goal.reminder };
-
-    // Save in database
-    try {
-      const res = await fetch(`${appConfig.API_URL}/goals/${goal.id}`, {
-        method: "PATCH",
-        headers: { "Content-type": "application/json" },
-        body: JSON.stringify({ reminder: newItem.reminder }),
+  const onReminderToggledCallback = (updatedGoal: Goal) => {
+    setGoals((currentGoals) => {
+      const newList: Goal[] = currentGoals.map((item) => {
+        if (item.id === updatedGoal.id) return updatedGoal;
+        return item;
       });
-      const updatedGoal: Goal = await res.json();
+      // Save in local storage (offline)
+      LocalStorageService.setLocalStorageData("goals", newList);
+      return newList;
+    });
+  };
 
-      setGoals((currentGoals) => {
-        const newList: Goal[] = currentGoals.map((item) => {
-          if (item.id === updatedGoal.id) return updatedGoal;
-          return item;
-        });
-        return newList;
-      });
-    } catch (err: any) {
-      console.error(err);
-    }
+  const onGoalCreatedCallback = (createdGoal: Goal) => {
+    setGoals((currentGoals) => {
+      const newList: Goal[] = sortGoalsList([...currentGoals, createdGoal]);
+      // Save in local storage (offline)
+      LocalStorageService.setLocalStorageData("goals", newList);
+      setIsAddGoalFormDisplayed(newList?.length === 0);
+      return newList;
+    });
   };
 
   // -----
@@ -77,15 +75,26 @@ export default function Goals({ list }: Props) {
       <GoalCard
         key={goal.id}
         goal={goal}
-        handleDeleteGoal={handleDeleteGoal}
-        handleToggleReminderGoal={handleToggleReminderGoal}
+        handleDelete={(gId: number) =>
+          GoalsService.deleteGoalById(gId, onDeleteGoalCallback)
+        }
+        handleReminderToggle={(g: Goal) =>
+          GoalsService.toggleReminder(g, onReminderToggledCallback)
+        }
       />
     ));
 
   // -----
 
   return (
-    <Layout title={title}>
+    <Layout
+      title={title}
+      isAddGoalFormDisplayed={isAddGoalFormDisplayed}
+      setIsAddGoalFormDisplayed={setIsAddGoalFormDisplayed}
+      handleAddGoal={(g: Goal) =>
+        GoalsService.createGoal(g, onGoalCreatedCallback)
+      }
+    >
       <section className="goals-section">
         <div className="goals_list text-center">
           {showListLayout || noListLayout}
@@ -96,3 +105,36 @@ export default function Goals({ list }: Props) {
     </Layout>
   );
 }
+
+Goals.defaultProps = {
+  list: [],
+};
+
+// --------------------
+
+const fetchGoalsFromLocalStorage = async () => {
+  const localData: LocalStorageData | null =
+    LocalStorageService.getLocalStorageData();
+  const localList: Goal[] | undefined = localData?.goals;
+  return localList ? sortGoalsList(localList) : null;
+};
+
+const fetchGoalsFromAPI = async () => {
+  const res = await fetch(`${appConfig.API_URL}/goals`);
+  const data = await res.json();
+  return data ? sortGoalsList(data) : null;
+};
+
+const fetchData = async () => {
+  return (
+    (await fetchGoalsFromLocalStorage()) ?? (await fetchGoalsFromAPI()) ?? []
+  );
+};
+
+// -----
+
+// Fetches data at request/load time
+export const getServerSideProps = async (ctx: any) => {
+  const list: Goal[] = await fetchData();
+  return { props: { list } as Props };
+};

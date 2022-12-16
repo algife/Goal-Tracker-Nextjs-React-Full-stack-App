@@ -1,0 +1,42 @@
+.toggle-switch {
+  --width: 2.5rem;
+  --height: calc(var(--width) / 2);
+  --border-radius: calc(var(--height) / 2);
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+
+  &__input {
+    display: none;
+
+    &:checked ~ .toggle-switch__fill {
+      background: $secondaryColor;
+    }
+
+    &:checked ~ .toggle-switch__fill::after {
+      transform: translateX(var(--height));
+    }
+  }
+  &__fill {
+    margin: 0 1em;
+    position: relative;
+    width: var(--width);
+    height: var(--height);
+    border-radius: var(--border-radius);
+    background: #ddd;
+    // transition: all 0.2s ease-in;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: var(--height);
+      width: var(--height);
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+      border-radius: var(--border-radius);
+      transition: transform 0.2s ease-in;
+    }
+  }
+}

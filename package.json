@@ -1,6 +1,6 @@
 {
   "name": "goal_tracker_nextjs_typescript_react_crud_full-stack_app",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -19,9 +19,13 @@
     "moment": "^2.29.4",
     "next": "13.0.7",
     "react": "18.2.0",
+    "react-datepicker": "^4.8.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
     "sass": "^1.56.2",
     "typescript": "4.9.4"
+  },
+  "devDependencies": {
+    "@types/react-datepicker": "^4.8.0"
   }
 }

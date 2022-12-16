@@ -1,9 +1,21 @@
-import Button from "./button.component";
-import Footer from "./footer.component";
-import GoBackLink from "./go-back-link.component";
-import Header from "./header.component";
-import Navbar from "./navbar.component";
+import Button from "./button";
+import Footer from "./footer";
+import GoBackLink from "./go-back-link";
+import GoalCard from "./goal-card";
+import Header from "./header";
+import Layout from "./layout";
+import Navbar from "./navbar";
+import ToggleSwitch from "./toggle-switch";
 
 // --------------------
 
-export { Button, Footer, GoBackLink, Header, Navbar };
+export {
+  Button,
+  Footer,
+  GoBackLink,
+  Header,
+  Layout,
+  Navbar,
+  ToggleSwitch,
+  GoalCard,
+};

@@ -1,8 +1,9 @@
-import { NavLink } from "./nav-link";
+import NavLink from "../models/nav-link";
 
 // --------------------
 
 export default interface AppConfig {
+  hostUrl: string | undefined;
   API_URL: string;
   port: number;
   isProd: boolean;

@@ -1,10 +1,18 @@
+import { Goal } from "./models";
+
 /**
- * HELPER FUNCTIONS AND UTILITY SCRIPTS
- * ====================================
+ * !     HELPER / UTILITY FUNCTIONS
+ * ======================================
  * */
 
-export const helperFn1 = () => 1;
+export const sortGoalsList = (goals: Goal[]): Goal[] => {
+  let sorted = [...goals];
+  sorted.sort((a, b) => {
+    if (a.deadline != null && b.deadline != null)
+      return Date.parse(a.deadline) - Date.parse(b.deadline);
+    if (a.id != null && b.id != null) return a.id - b.id;
 
-export const helperFn2 = () => 1 + 1;
-
-export const helperFn3 = () => 6 / 2;
+    return 1;
+  });
+  return sorted;
+};

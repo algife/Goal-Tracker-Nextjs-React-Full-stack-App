@@ -8,6 +8,19 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
+  sassOptions: {
+    includePaths: [path.join(__dirname, "styles")],
+  },
+  // TODO: Uncomment when needed
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: "/",
+  //       destination: "/goals",
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
 };
 
 module.exports = nextConfig;
